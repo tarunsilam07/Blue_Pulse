@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Water Monitoring</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 30px 0;
+        color: #05967e;
+        text-shadow: 1px 1px 2px #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+        background-color: #ffffffd1;
+        border-radius: 10px;
+        box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      h2 {
+        color: #00796b;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .graphs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+
+      .graph-container {
+        cursor: pointer;
+        flex-basis: 48%;
+        margin: 15px 0;
+      }
+
+      iframe {
+        width: 100%;
+        height: 350px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        pointer-events: none; /* Disable iframe interaction */
+      }
+
+      iframe:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .graph-controls {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .graph-controls button {
+        background-color: #00796b;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .graph-controls button:hover {
+        background-color: #004d40;
+      }
+
+      /* Loader CSS */
+      .loader {
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #004d40;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin: auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .graph-container {
+          flex-basis: 100%;
+        }
+
+        iframe {
+          height: 280px;
+        }
+
+        .graph-controls button {
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1><u>Real-Time Water Monitoring using IoT</u></h1>
+
+    <div class="container">
+      <div class="graphs">
+        <!-- Temperature Graph -->
+        <div class="graph-container" onclick="openFullScreen('tempGraph')">
+          <h2>Temperature Graph</h2>
+          <div class="loader" id="tempGraphLoader"></div>
+          <iframe
+            id="tempGraph"
+            style="display: none"
+            src="https://thingspeak.com/channels/2674134/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&yaxismax=60&yaxismin=0&width=500&height=350"
+            onload="hideLoader('tempGraphLoader', 'tempGraph')"
+          ></iframe>
+        </div>
+
+        <!-- Humidity Graph -->
+        <div class="graph-container" onclick="openFullScreen('humidityGraph')">
+          <h2>Humidity Graph</h2>
+          <div class="loader" id="humidityGraphLoader"></div>
+          <iframe
+            id="humidityGraph"
+            style="display: none"
+            src="https://thingspeak.com/channels/2674134/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&yaxismax=100&yaxismin=60&width=500&height=350"
+            onload="hideLoader('humidityGraphLoader', 'humidityGraph')"
+          ></iframe>
+        </div>
+
+        <!-- Gas Level Graph -->
+        <div class="graph-container" onclick="openFullScreen('gasGraph')">
+          <h2>Gas Level Graph</h2>
+          <div class="loader" id="gasGraphLoader"></div>
+          <iframe
+            id="gasGraph"
+            style="display: none"
+            src="https://thingspeak.com/channels/2674134/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&yaxismax=1023&yaxismin=100&width=1100&height=350"
+            onload="hideLoader('gasGraphLoader', 'gasGraph')"
+          ></iframe>
+        </div>
+
+        <!-- Underwater Temperature Graph -->
+        <div
+          class="graph-container"
+          onclick="openFullScreen('underwaterTempGraph')"
+        >
+          <h2>Underwater Temperature Graph</h2>
+          <div class="loader" id="underwaterTempGraphLoader"></div>
+          <iframe
+            id="underwaterTempGraph"
+            style="display: none"
+            src="https://thingspeak.com/channels/2674134/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&yaxismax=50&yaxismin=0&width=500&height=350"
+            onload="hideLoader('underwaterTempGraphLoader', 'underwaterTempGraph')"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="graph-controls">
+      <button onclick="refreshGraphs()">Refresh Graphs</button>
+      <button onclick="changeChartType('bar')">Bar Chart</button>
+      <button onclick="changeChartType('line')">Line Chart</button>
+    </div>
+
+    <script>
+      // Refresh the graphs
+      function refreshGraphs() {
+        const iframes = document.querySelectorAll("iframe");
+        iframes.forEach((iframe) => {
+          const src = iframe.src;
+          iframe.src = "";
+          iframe.src = src;
+        });
+      }
+
+      // Change chart type
+      function changeChartType(type) {
+        document.getElementById("tempGraph").src =
+          "https://thingspeak.com/channels/2674134/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=" +
+          type +
+          "&yaxismax=60&yaxismin=0&width=500&height=350";
+        document.getElementById("humidityGraph").src =
+          "https://thingspeak.com/channels/2674134/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=" +
+          type +
+          "&yaxismax=100&yaxismin=60&width=500&height=350";
+        document.getElementById("gasGraph").src =
+          "https://thingspeak.com/channels/2674134/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=" +
+          type +
+          "&yaxismax=1023&yaxismin=100&width=500&height=350";
+        document.getElementById("underwaterTempGraph").src =
+          "https://thingspeak.com/channels/2674134/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=" +
+          type +
+          "&yaxismax=50&yaxismin=0&width=500&height=350";
+      }
+
+      // Hide loader when graph is loaded
+      function hideLoader(loaderId, iframeId) {
+        document.getElementById(loaderId).style.display = "none";
+        document.getElementById(iframeId).style.display = "block";
+      }
+
+      // Open graph in full-screen mode
+      function openFullScreen(graphId) {
+        const iframe = document.getElementById(graphId);
+        const fullScreenDiv = document.createElement("div");
+
+        fullScreenDiv.style.position = "fixed";
+        fullScreenDiv.style.top = 0;
+        fullScreenDiv.style.left = 0;
+        fullScreenDiv.style.width = "100vw";
+        fullScreenDiv.style.height = "100vh";
+        fullScreenDiv.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        fullScreenDiv.style.zIndex = 1000;
+        fullScreenDiv.style.display = "flex";
+        fullScreenDiv.style.justifyContent = "center";
+        fullScreenDiv.style.alignItems = "center";
+
+        // Create the loader
+        const loader = document.createElement("div");
+        loader.style.border = "16px solid #f3f3f3"; /* Light grey */
+        loader.style.borderTop = "16px solid #00796b"; /* Green */
+        loader.style.borderRadius = "50%";
+        loader.style.width = "120px";
+        loader.style.height = "120px";
+        loader.style.animation = "spin 2s linear infinite";
+
+        // Add the loader to the full screen div
+        fullScreenDiv.appendChild(loader);
+
+        // Loader animation CSS
+        const style = document.createElement("style");
+        style.innerHTML = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+        document.head.appendChild(style);
+
+        // Get the source of the original iframe
+        const originalSrc = iframe.src;
+
+        // Remove width and height parameters from the URL
+        const newSrc = originalSrc.replace(
+          /width=\d+&height=\d+/,
+          "width=1000&height=500"
+        );
+
+        const fullScreenIframe = document.createElement("iframe");
+        fullScreenIframe.src = newSrc; // Set the modified source
+        fullScreenIframe.style.width = "100%"; // Use 100% for full width
+        fullScreenIframe.style.height = "100%"; // Use 100% for full height
+        fullScreenIframe.style.border = "none";
+        fullScreenIframe.style.display = "none"; // Hide the iframe initially
+
+        // Show iframe once it fully loads and hide the loader
+        fullScreenIframe.onload = () => {
+          loader.style.display = "none"; // Hide loader
+          fullScreenIframe.style.display = "block"; // Show iframe
+        };
+
+        fullScreenDiv.appendChild(fullScreenIframe);
+
+        const exitButton = document.createElement("button");
+        exitButton.textContent = "Back to Main Screen";
+        exitButton.style.position = "absolute";
+        exitButton.style.top = "20px";
+        exitButton.style.right = "20px";
+        exitButton.style.padding = "10px 20px";
+        exitButton.style.backgroundColor = "#00796b";
+        exitButton.style.color = "#fff";
+        exitButton.style.border = "none";
+        exitButton.style.cursor = "pointer";
+        exitButton.style.fontSize = "16px";
+        exitButton.style.borderRadius = "6px";
+
+        exitButton.onclick = () => {
+          document.body.removeChild(fullScreenDiv);
+        };
+
+        fullScreenDiv.appendChild(exitButton);
+        document.body.appendChild(fullScreenDiv);
+      }
+    </script>
+  </body>
+</html>
