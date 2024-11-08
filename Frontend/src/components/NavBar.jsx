@@ -1,15 +1,21 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie'
+import { useNavigate, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    Cookies.remove('token',{ path: '/' });
+    Cookies.remove('token', { path: '/' });
+    localStorage.removeItem('isVerified');
     navigate('/signin');
   };
+
+  const linkClasses = (path) =>
+    `text-lg text-white transition-all duration-300 ${
+      location.pathname === path ? 'underline' : 'hover:text-[#4FC3F7] hover:border-b-2 border-[#4FC3F7]'
+    }`;
 
   return (
     <nav className="fixed w-full top-0 bg-[#1E2A38] shadow-lg z-10">
@@ -19,34 +25,22 @@ const Navbar = () => {
         </div>
         <ul className="flex space-x-8">
           <li>
-            <a
-              href="/home"
-              className="text-lg text-white hover:text-[#4FC3F7] hover:border-b-2 border-[#4FC3F7] transition-all duration-300"
-            >
+            <a href="/home" className={linkClasses('/home')}>
               Home
             </a>
           </li>
           <li>
-            <a
-              href="/about"
-              className="text-lg text-white hover:text-[#4FC3F7] hover:border-b-2 border-[#4FC3F7] transition-all duration-300"
-            >
+            <a href="/about" className={linkClasses('/about')}>
               About
             </a>
           </li>
           <li>
-            <a
-              href="/analysis"
-              className="text-lg text-white hover:text-[#4FC3F7] hover:border-b-2 border-[#4FC3F7] transition-all duration-300"
-            >
+            <a href="/analysis" className={linkClasses('/analysis')}>
               Analysis
             </a>
           </li>
           <li>
-            <a
-              href="/team"
-              className="text-lg text-white hover:text-[#4FC3F7] hover:border-b-2 border-[#4FC3F7] transition-all duration-300"
-            >
+            <a href="/team" className={linkClasses('/team')}>
               Team
             </a>
           </li>

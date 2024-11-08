@@ -7,58 +7,14 @@ import instagram from '/instagram.svg';
 import linkedin from '/linkedin.svg';
 import twitter from '/twitter.svg';
 
-import img1 from '/img1.jpg';
-import img2 from '/img2.jpg';
-import img3 from '/img3.jpg';
-import img4 from '/img4.jpg';
-import img5 from '/img5.jpg';
-import img6 from '/img6.jpg';
+import img1 from '/img1.jpeg';
+import img2 from '/img2.jpeg';
+import img3 from '/img3.jpeg';
+import img4 from '/img4.jpeg';
+import img5 from '/img5.jpeg';
+import img6 from '/img6.jpeg';
 
 const teamMembers = [
-  {
-    name: 'D Mallesh',
-    role: 'Project Leader',
-    imgSrc: img5,
-    socials: {
-      facebook: facebook,
-      twitter: twitter,
-      instagram: instagram,
-      linkedin: linkedin,
-    },
-  },
-  {
-    name: 'M Lalitha',
-    role: 'Developer',
-    imgSrc: img3,
-    socials: {
-      facebook: facebook,
-      twitter: twitter,
-      instagram: instagram,
-      linkedin: linkedin,
-    },
-  },
-  {
-    name: 'M Srivalli',
-    role: 'Designer',
-    imgSrc: img2,
-    socials: {
-      facebook: facebook,
-      twitter: twitter,
-      instagram: instagram,
-      linkedin: linkedin,
-    },
-  },
-  {
-    name: 'P Sai Krishna',
-    role: 'Backend Developer',
-    imgSrc: img4,
-    socials: {
-      facebook: facebook,
-      twitter: twitter,
-      instagram: instagram,
-      linkedin: linkedin,
-    },
-  },
   {
     name: 'S Tarun',
     role: 'Frontend Developer',
@@ -73,7 +29,51 @@ const teamMembers = [
   {
     name: 'V Sidhardha',
     role: 'Project Manager',
+    imgSrc: img5,
+    socials: {
+      facebook: facebook,
+      twitter: twitter,
+      instagram: instagram,
+      linkedin: linkedin,
+    },
+  },
+  {
+    name: 'M Lalitha',
+    role: 'FrontEnd Developer',
+    imgSrc: img4,
+    socials: {
+      facebook: facebook,
+      twitter: twitter,
+      instagram: instagram,
+      linkedin: linkedin,
+    },
+  },
+  {
+    name: 'M Srivalli',
+    role: 'Designer',
+    imgSrc: img3,
+    socials: {
+      facebook: facebook,
+      twitter: twitter,
+      instagram: instagram,
+      linkedin: linkedin,
+    },
+  },
+  {
+    name: 'D Mallesh',
+    role: 'Project Leader',
     imgSrc: img6,
+    socials: {
+      facebook: facebook,
+      twitter: twitter,
+      instagram: instagram,
+      linkedin: linkedin,
+    },
+  },
+  {
+    name: 'P Sai Krishna',
+    role: 'Backend Developer',
+    imgSrc: img2,
     socials: {
       facebook: facebook,
       twitter: twitter,
