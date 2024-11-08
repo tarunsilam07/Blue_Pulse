@@ -3,14 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import homeImage from '/home.png';
+import { useLogData } from '../context/LogContext';
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const logData=useLogData()
 
   useEffect(() => {
     const token = Cookies.get('token');
-    if (!token) {
+    const user=logData?.user;
+        console.log(user);
+        const isverified=user?.user?.emailVerified;
+    if (!token && !isverified) {
       navigate('/signin');
     } else {
       axios.get('http://localhost:3000/home', {
@@ -23,7 +28,7 @@ const Home = () => {
         navigate('/signin');
       });
     }
-  }, [navigate]);
+  }, [navigate,logData]);
 
   const handleLogout = () => {
     Cookies.remove('token',{ path: '/' });

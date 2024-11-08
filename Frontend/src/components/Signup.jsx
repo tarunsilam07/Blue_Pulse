@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, sendEmailVerification, GoogleAuthProvider } from 'firebase/auth';
+import firebaseapp from '../FireBase';
+
+const auth = getAuth(firebaseapp);
+const googleProvider = new GoogleAuthProvider();
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -14,44 +19,56 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrorMessage(''); 
+    setErrorMessage('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await axios.post('http://localhost:3000/signup', formData, {
-        withCredentials: true
-      });
-      alert('User created successfully. Please sign in.');
+      await axios.post('http://localhost:3000/signup', formData, { withCredentials: true });
+    } catch (error) {
+      setErrorMessage(error.response?.data || 'An error occurred. Please try again.');
+      setIsSubmitting(false);
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+      await sendEmailVerification(user);
+      alert('Verification email sent. Please check your inbox.');
       navigate('/signin');
     } catch (error) {
-      setErrorMessage(error.response.data || 'An error occurred. Please try again.');
+      console.error("Error signing up:", error.message);
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 to-blue-600">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full relative transform hover:scale-105 transition-transform duration-300 ease-in-out">
-        <h1 className="text-center text-3xl font-bold text-green-600 mb-6 animate-bounce">Create Your Account</h1>
+  const googleSignIn = () => {
+    setIsSubmitting(true);
+    return signInWithPopup(auth, googleProvider)
+      .then((value) => {
+        navigate('/signin');
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSubmitting(false);
+        navigate('/signin');
+      });
+  };
 
-        
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 to-blue-600 px-4">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative transform transition-transform duration-300 ease-in-out">
+        <h1 className="text-center text-3xl font-bold text-green-600 mb-6">Create Your Account</h1>
+
         {errorMessage && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            <strong className="font-bold">User Already Exits</strong>
+            <strong className="font-bold">{errorMessage}</strong>
           </div>
         )}
 
-        
-        <div className="flex justify-center mb-4">
-          <div className="bg-green-100 p-4 rounded-full shadow-md">
-            <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16.24 7l.25.24A7.73 7.73 0 0119 12.24l.24.25m0 0A7.74 7.74 0 0112.26 19l-.25-.25M7.75 16.24l-.24-.25A7.73 7.73 0 015 12.26l-.25-.25m0 0A7.74 7.74 0 0111.74 5l.25.25M16.24 7L7.75 16.24"></path></svg>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6 animate-fadeInUp">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <label htmlFor="userName" className="block text-gray-700 font-medium mb-2">Username</label>
             <input
@@ -104,7 +121,27 @@ const Signup = () => {
           </button>
         </form>
 
-        <p className="text-center text-gray-600 mt-4">Already have an account? 
+        <div className="flex justify-center items-center my-4">
+          <div className="border-b w-full border-gray-300"></div>
+          <span className="mx-4 text-gray-500">or</span>
+          <div className="border-b w-full border-gray-300"></div>
+        </div>
+
+        <button
+          onClick={googleSignIn}
+          className="w-full mt-4 py-3 flex items-center justify-center bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition duration-200 ease-in-out"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.492 12.275c0-.787-.07-1.55-.201-2.285H12v4.334h6.552a5.59 5.59 0 01-2.423 3.666v3.074h3.909c2.288-2.106 3.453-5.211 3.453-8.789z"></path>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.933-2.933l-3.909-3.074a7.998 7.998 0 01-4.024 1.104A8.004 8.004 0 014.834 15.25H.79v3.137C2.773 21.69 7.155 24 12 24z"></path>
+            <path fill="#FBBC05" d="M4.834 15.25a7.96 7.96 0 01-.492-2.5c0-.873.176-1.704.492-2.5V7.113H.79A12 12 0 000 12c0 1.915.446 3.72 1.24 5.387l3.594-2.137z"></path>
+            <path fill="#EA4335" d="M12 4.84c1.754 0 3.323.607 4.56 1.799l3.43-3.43C17.95 1.37 15.24 0 12 0 7.155 0 2.773 2.31.79 5.612l3.596 2.137A8.004 8.004 0 0112 4.84z"></path>
+          </svg>
+          <span className="text-gray-600 font-medium">Signup with Google</span>
+        </button>
+
+        <p className="text-center text-gray-600 mt-6">
+          Already have an account?
           <a href="/signin" className="text-green-600 hover:text-green-500 transition-colors"> Sign in</a>
         </p>
       </div>
