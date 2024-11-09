@@ -9,7 +9,7 @@ const dataSchema=new mongoose.Schema({
         type:String,
         default:"0"
     },
-    gas:{
+    oxygen:{
         type:String,
         default:"0"
     },

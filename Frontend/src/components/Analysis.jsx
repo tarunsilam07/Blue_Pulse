@@ -21,7 +21,7 @@ const Analysis = () => {
   const [sensorData, setSensorData] = useState({
     temperature: [],
     humidity: [],
-    gas: [],
+    oxygen: [],
     conductivity: [],
     nitrate: [],
     timestamps: [],
@@ -48,7 +48,7 @@ const Analysis = () => {
         const updatedData = {
           temperature: [...prevData.temperature, data.temperature],
           humidity: [...prevData.humidity, data.humidity],
-          gas: [...prevData.oxygen, data.oxygen],
+          oxygen: [...prevData.oxygen, data.oxygen],
           conductivity: [...prevData.conductivity, data.conductivity],
           nitrate: [...prevData.nitrate, data.nitrate],
           timestamps: [...prevData.timestamps, new Date(data.timestamp).toLocaleString()],
@@ -67,7 +67,7 @@ const Analysis = () => {
   const formatSensorData = (data) => {
     const temperature = [];
     const humidity = [];
-    const gas = [];
+    const oxygen = [];
     const conductivity = [];
     const nitrate = [];
     const timestamps = [];
@@ -81,7 +81,7 @@ const Analysis = () => {
       timestamps.push(new Date(entry.timestamp).toLocaleString());
     });
 
-    return { temperature, humidity, gas, conductivity, nitrate, timestamps };
+    return { temperature, humidity, oxygen, conductivity, nitrate, timestamps };
   };
 
   const createChartData = (label, data) => ({
@@ -137,15 +137,15 @@ const Analysis = () => {
           />
         </div>
         <div className="w-full">
-          <h2 className="text-lg font-bold text-center mb-4">gas Levels</h2>
+          <h2 className="text-lg font-bold text-center mb-4">Oxygen Levels</h2>
           <Line
-            data={createChartData('gas', sensorData.gas)}
+            data={createChartData('oxygen', sensorData.oxygen)}
             options={{
               plugins: {
                 tooltip: {
                   callbacks: {
                     label: (context) =>
-                      `gas: ${context.raw}% at ${sensorData.timestamps[context.dataIndex]}`,
+                      `oxygen: ${context.raw}% at ${sensorData.timestamps[context.dataIndex]}`,
                   },
                 },
               },

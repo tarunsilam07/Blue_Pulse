@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import homeImage from '/home.png';
+import homeImage from '/home1.jpg';
 import { useLogData } from '../context/LogContext';
 import Navbar from './NavBar';
 
