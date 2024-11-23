@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import firebaseapp from '../FireBase';
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useLogData } from '../context/LogContext';
+import B2 from '/B2.jpg'
+import logo from '/BluepulseLogo1.png'
 
 const auth = getAuth(firebaseapp);
 const googleProvider = new GoogleAuthProvider();
@@ -71,13 +73,13 @@ const Signin = () => {
           </div>
         )}
 
-        <div className="flex justify-center mb-4">
-          <div className="bg-purple-100 p-4 rounded-full shadow-md">
-            <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16.24 7l.25.24A7.73 7.73 0 0119 12.24l.24.25m0 0A7.74 7.74 0 0112.26 19l-.25-.25M7.75 16.24l-.24-.25A7.73 7.73 0 015 12.26l-.25-.25m0 0A7.74 7.74 0 0111.74 5l.25.25M16.24 7L7.75 16.24"></path>
-            </svg>
-          </div>
-        </div>
+<div className="flex justify-center mb-4">
+  <div className="bg-purple-100 p-6 rounded-full shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-110">
+    <img src={B2} alt="App Icon" className="w-12 h-12 object-cover" />
+  </div>
+</div>
+
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">

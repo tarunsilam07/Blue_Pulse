@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, sendEmailVerification, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import firebaseapp from '../FireBase';
 
 const auth = getAuth(firebaseapp);
 const googleProvider = new GoogleAuthProvider();
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ userName: '', email: '', password: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
@@ -24,37 +20,41 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+    if (formData.password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters.');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       await axios.post('http://localhost:3000/signup', formData, { withCredentials: true });
-    } catch (error) {
-      setErrorMessage(error.response?.data || 'An error occurred. Please try again.');
-      setIsSubmitting(false);
-    }
-
-    try {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      const user = userCredential.user;
-      await sendEmailVerification(user);
+      await sendEmailVerification(userCredential.user);
       alert('Verification email sent. Please check your inbox.');
       navigate('/signin');
     } catch (error) {
-      console.error("Error signing up:", error.message);
+      setErrorMessage(error.response?.data?.error || 'An error occurred. Please try again.');
+    } finally {
       setIsSubmitting(false);
     }
   };
+  
 
-  const googleSignIn = () => {
+  const googleSignIn = async () => {
     setIsSubmitting(true);
-    return signInWithPopup(auth, googleProvider)
-      .then((value) => {
-        navigate('/signin');
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsSubmitting(false);
-        navigate('/signin');
-      });
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate('/signin');
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Google sign-in failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

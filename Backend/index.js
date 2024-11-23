@@ -8,6 +8,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const pastRoute=require('./routes/pastRoute')
 const bodyParser=require('body-parser')
+const checkThresholds=require('./alerts/thresholdChecker')
 
 const app = express();
 const server = http.createServer(app);
@@ -47,6 +48,8 @@ io.on('connection', (socket) => {
     console.log('Client disconnected');
   });
 });
+
+setInterval(checkThresholds, 60000);
 
 server.listen(PORT, () => {
   console.log(`Server started at PORT: ${PORT}`);
