@@ -5,7 +5,7 @@ const dataSchema=new mongoose.Schema({
         type:String,
         default:"0"
     },
-    humidity:{
+    pH:{
         type:String,
         default:"0"
     },

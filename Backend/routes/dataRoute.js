@@ -6,10 +6,10 @@ const SensorData=require('../models/SensorData')
 
 router.get('/api/data', async (req, res) => {
   console.log(req.query)
-  const { temperature, humidity,oxygen,conductivity,nitrate } = req.query;
+  const { temperature, pH,oxygen,conductivity,nitrate } = req.query;
   const newData = await SensorData.create({
     temperature,
-    humidity,
+    pH,
     oxygen,
     conductivity,
     nitrate 

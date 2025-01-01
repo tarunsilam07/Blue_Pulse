@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -19,9 +20,9 @@ const io = socketIo(server, {
     credentials: true,
   },
 });
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
-mongoose.connect('mongodb://127.0.0.1:27017/BluePulse')
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log(`MongoDB connected Successfully`))
   .catch((err) => console.log('error', err));
 

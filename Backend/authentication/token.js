@@ -1,5 +1,5 @@
 const JWT=require('jsonwebtoken');
-const secret_key='BluePulse66@@';
+const secret_key=process.env.SECRET_KEY;
 
 const createTokenForUser=(user)=>{
     const payload={

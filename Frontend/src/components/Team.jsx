@@ -17,7 +17,7 @@ import img6 from '/img6.jpeg';
 const teamMembers = [
   {
     name: 'S Tarun',
-    role: 'Frontend Developer',
+    role: 'FullStack Developer',
     imgSrc: img1,
     socials: {
       facebook: { icon: facebook, url: 'https://facebook.com/profile-link-tarun' },
@@ -50,7 +50,7 @@ const teamMembers = [
   },
   {
     name: 'M Srivalli',
-    role: 'Designer',
+    role: 'Flutter Developer',
     imgSrc: img3,
     socials: {
       facebook: { icon: facebook, url: 'https://facebook.com/profile-link-srivalli' },
@@ -61,7 +61,7 @@ const teamMembers = [
   },
   {
     name: 'D Mallesh',
-    role: 'Project Leader',
+    role: 'IoT Engineer',
     imgSrc: img6,
     socials: {
       facebook: { icon: facebook, url: 'https://facebook.com/profile-link-mallesh' },
@@ -72,7 +72,7 @@ const teamMembers = [
   },
   {
     name: 'P Sai Krishna',
-    role: 'Backend Developer',
+    role: 'Research',
     imgSrc: img2,
     socials: {
       facebook: { icon: facebook, url: 'https://facebook.com/profile-link-krishna' },

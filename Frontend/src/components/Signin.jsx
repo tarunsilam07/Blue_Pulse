@@ -36,7 +36,7 @@ const Signin = () => {
         .then((value) => {
           console.log(value);
           logData.setUser(value)
-          navigate('/home');
+          navigate('/');
         })
         .catch((err) => {
           console.log(err);
@@ -54,7 +54,7 @@ const Signin = () => {
       .then((value) => {
         console.log(value);
         logData.setUser(value)
-        navigate('/home');
+        navigate('/');
       })
       .catch((err) => {
         console.log(err);

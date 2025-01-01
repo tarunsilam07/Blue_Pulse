@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import io from 'socket.io-client';
 import Navbar from './NavBar';
 import Footer from './Footer';
-import DangerAlert from'./DangerAlert'
+import DangerAlert from './DangerAlert';
 import {
   Chart as ChartJS,
   LineElement,
@@ -20,7 +20,7 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, T
 const Analysis = () => {
   const [sensorData, setSensorData] = useState({
     temperature: [],
-    humidity: [],
+    pH: [],
     oxygen: [],
     conductivity: [],
     nitrate: [],
@@ -28,10 +28,9 @@ const Analysis = () => {
   });
 
   useEffect(() => {
-   
     const fetchSensorData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/sensor-data/recent'); 
+        const response = await fetch('http://localhost:3000/api/sensor-data/recent');
         const data = await response.json();
         const formattedData = formatSensorData(data);
         setSensorData(formattedData);
@@ -40,21 +39,21 @@ const Analysis = () => {
       }
     };
 
-    fetchSensorData(); 
+    fetchSensorData();
     const socket = io('http://localhost:3000');
 
     socket.on('newData', (data) => {
       setSensorData((prevData) => {
         const updatedData = {
           temperature: [...prevData.temperature, data.temperature],
-          humidity: [...prevData.humidity, data.humidity],
+          pH: [...prevData.pH, data.pH],
           oxygen: [...prevData.oxygen, data.oxygen],
           conductivity: [...prevData.conductivity, data.conductivity],
           nitrate: [...prevData.nitrate, data.nitrate],
           timestamps: [...prevData.timestamps, new Date(data.timestamp).toLocaleString()],
         };
 
-        return updatedData; 
+        return updatedData;
       });
     });
 
@@ -63,10 +62,9 @@ const Analysis = () => {
     };
   }, []);
 
-  
   const formatSensorData = (data) => {
     const temperature = [];
-    const humidity = [];
+    const pH = [];
     const oxygen = [];
     const conductivity = [];
     const nitrate = [];
@@ -74,14 +72,14 @@ const Analysis = () => {
 
     data.forEach((entry) => {
       temperature.push(entry.temperature);
-      humidity.push(entry.humidity);
+      pH.push(entry.pH);
       oxygen.push(entry.oxygen);
       conductivity.push(entry.conductivity);
       nitrate.push(entry.nitrate);
       timestamps.push(new Date(entry.timestamp).toLocaleString());
     });
 
-    return { temperature, humidity, oxygen, conductivity, nitrate, timestamps };
+    return { temperature, pH, oxygen, conductivity, nitrate, timestamps };
   };
 
   const createChartData = (label, data) => ({
@@ -121,15 +119,15 @@ const Analysis = () => {
           />
         </div>
         <div className="w-full">
-          <h2 className="text-lg font-bold text-center mb-4">Humidity</h2>
+          <h2 className="text-lg font-bold text-center mb-4">pH Levels</h2>
           <Line
-            data={createChartData('Humidity', sensorData.humidity)}
+            data={createChartData('pH', sensorData.pH)}
             options={{
               plugins: {
                 tooltip: {
                   callbacks: {
                     label: (context) =>
-                      `Humidity: ${context.raw}% at ${sensorData.timestamps[context.dataIndex]}`,
+                      `pH: ${context.raw} at ${sensorData.timestamps[context.dataIndex]}`,
                   },
                 },
               },
@@ -145,7 +143,7 @@ const Analysis = () => {
                 tooltip: {
                   callbacks: {
                     label: (context) =>
-                      `oxygen: ${context.raw}% at ${sensorData.timestamps[context.dataIndex]}`,
+                      `Oxygen: ${context.raw}% at ${sensorData.timestamps[context.dataIndex]}`,
                   },
                 },
               },
@@ -185,7 +183,7 @@ const Analysis = () => {
           />
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
