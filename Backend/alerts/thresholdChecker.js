@@ -1,13 +1,18 @@
+const nodemailer = require("nodemailer");
 const SensorData = require("../models/SensorData");
 const User = require("../models/user");
-const SibApiV3Sdk = require("sib-api-v3-sdk");
 
-const client = SibApiV3Sdk.ApiClient.instance;
-const apiKey = client.authentications["api-key"];
-apiKey.apiKey = process.env.SEND_BLUE_API; // Replace with your valid API key
-
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 let lastAlert = { temperature: null, oxygen: null, pH: null, conductivity: null, nitrate: null };
+
+const transport = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_API_KEY,
+  },
+});
 
 async function checkThresholds() {
   try {
@@ -19,11 +24,11 @@ async function checkThresholds() {
     }
 
     const THRESHOLDS = {
-      temperature: 30, // °C
-      oxygen: 8,       // mg/L
-      pH: 7.5,         // pH level
-      conductivity: 500, // µS/cm
-      nitrate: 10      // mg/L
+      temperature: 30,
+      oxygen: 8,
+      pH: 7.5,
+      conductivity: 500,
+      nitrate: 10,
     };
 
     const users = await User.find({}, "email userName");
@@ -31,118 +36,51 @@ async function checkThresholds() {
     for (const [key, threshold] of Object.entries(THRESHOLDS)) {
       if (latestData[key] > threshold && latestData[key] !== lastAlert[key]) {
         for (const user of users) {
-          const sendSmtpEmail = {
-            to: [{ email: user.email, name: user.userName }],
-            sender: { email: "bluepulse.team6@gmail.com", name: "BluePulse Alerts" },
+          const mailOptions = {
+            from: "bluepulse.team6@gmail.com",
+            to: user.email,
             subject: `${key.charAt(0).toUpperCase() + key.slice(1)} Alert from BluePulse`,
-            htmlContent: `
+            html: `
               <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background-color: #d32f2f;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-        }
-        .header h2 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .content {
-            padding: 20px;
-        }
-        .content p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .alert-box {
-            background-color: #ffe5e5;
-            border-left: 5px solid #d32f2f;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        .alert-box p {
-            margin: 5px 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .details-box {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .details-box p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-        .footer {
-            text-align: center;
-            padding: 10px 0;
-            font-size: 14px;
-            color: #777;
-            background-color: #f1f1f1;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h2>🚨 ${key.charAt(0).toUpperCase() + key.slice(1)} Alert Notification</h2>
-        </div>
-        <div class="content">
-            <p>Hello ${user.userName},</p>
-            <p>An alert has been triggered due to a breach in the ${key} threshold. Please review the details below and take any necessary action.</p>
-
-            <div class="alert-box">
-                <p><strong>${key.charAt(0).toUpperCase() + key.slice(1)} Alert:</strong> Critical Level Reached</p>
-            </div>
-
-            <div class="details-box">
-                <p><strong>📍 Location:</strong> ACOE</p>
-                <p><strong>⚠️ Threshold:</strong> ${threshold} ${getUnit(key)}</p>
-                <p><strong>🔴 Current ${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${latestData[key]} ${getUnit(key)}</p>
-            </div>
-
-            <p>For more details, please log in to your monitoring system dashboard.</p>
-        </div>
-        <div class="footer">
-            <p>This is an automated message from BluePulse. Please do not reply.</p>
-        </div>
-    </div>
-</body>
-</html>
-            `
+              <html lang="en">
+              <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body { font-family: Arial, sans-serif; background-color: #f3f4f6; color: #333; }
+                .container { max-width: 600px; margin: 30px auto; background-color: #fff; border-radius: 8px;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden; }
+                .header { background-color: #d32f2f; color: #fff; padding: 20px; text-align: center; }
+                .content { padding: 20px; }
+                .alert-box { background-color: #ffe5e5; border-left: 5px solid #d32f2f; padding: 15px; border-radius: 4px; }
+                .details-box { background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 4px; }
+                .footer { background-color: #f1f1f1; text-align: center; padding: 10px; font-size: 14px; color: #777; }
+              </style></head>
+              <body>
+                <div class="container">
+                  <div class="header"><h2>🚨 ${capitalize(key)} Alert Notification</h2></div>
+                  <div class="content">
+                    <p>Hello ${user.userName},</p>
+                    <p>An alert has been triggered due to a breach in the ${key} threshold.</p>
+                    <div class="alert-box">
+                      <p><strong>${capitalize(key)} Alert:</strong> Critical Level Reached</p>
+                    </div>
+                    <div class="details-box">
+                      <p><strong>📍 Location:</strong> ACOE</p>
+                      <p><strong>⚠️ Threshold:</strong> ${threshold} ${getUnit(key)}</p>
+                      <p><strong>🔴 Current ${capitalize(key)}:</strong> ${latestData[key]} ${getUnit(key)}</p>
+                    </div>
+                    <p>Please log in to your monitoring dashboard for more details.</p>
+                  </div>
+                  <div class="footer"><p>This is an automated message from BluePulse. Please do not reply.</p></div>
+                </div>
+              </body></html>
+            `,
           };
 
           try {
-            await apiInstance.sendTransacEmail(sendSmtpEmail);
-            console.log(`Alert email sent to ${user.userName} at ${user.email}`);
+            await transport.sendMail(mailOptions);
+            console.log(`✅ Alert email sent to ${user.userName} at ${user.email}`);
           } catch (emailError) {
-            console.error("Failed to send email:", emailError);
+            console.error("❌ Failed to send email:", emailError);
           }
         }
 
@@ -150,7 +88,7 @@ async function checkThresholds() {
       }
     }
   } catch (error) {
-    console.error("Error checking thresholds or sending email:", error);
+    console.error("❌ Error checking thresholds or sending email:", error);
   }
 }
 
@@ -169,6 +107,10 @@ function getUnit(parameter) {
     default:
       return "";
   }
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 module.exports = checkThresholds;

@@ -26,11 +26,10 @@ const Analysis = () => {
     nitrate: [],
     timestamps: [],
   });
-
   useEffect(() => {
     const fetchSensorData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/sensor-data/recent');
+        const response = await fetch(`http://localhost:3000/api/sensor-data/recent`);
         const data = await response.json();
         const formattedData = formatSensorData(data);
         setSensorData(formattedData);

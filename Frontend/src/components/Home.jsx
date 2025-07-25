@@ -23,7 +23,7 @@ const Home = () => {
     if (!token && !isVerified) {
       navigate('/signin');
     } else {
-      axios.get('http://localhost:3000/home', {
+      axios.get('http://localhost:3000/home',{
         withCredentials: true
       })
       .then(res => setUserData(res.data.user))

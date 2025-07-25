@@ -21,11 +21,11 @@ const Navbar = () => {
     <nav className="fixed w-full top-0 bg-[#1E2A38] shadow-lg z-10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold text-white tracking-wide">
-          <a href="/home" className="hover:text-[#4FC3F7] transition-all">Blue Pulse</a>
+          <a href="/" className="hover:text-[#4FC3F7] transition-all">Blue Pulse</a>
         </div>
         <ul className="flex space-x-8">
           <li>
-            <a href="/home" className={linkClasses('/home')}>
+            <a href="/" className={linkClasses('/home')}>
               Home
             </a>
           </li>

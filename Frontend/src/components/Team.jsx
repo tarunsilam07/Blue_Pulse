@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from './NavBar';
 import Footer from './Footer';
 
@@ -8,11 +7,8 @@ import linkedin from '/linkedin.svg';
 import twitter from '/twitter.svg';
 
 import img1 from '/img1.jpeg';
-import img2 from '/img2.jpeg';
-import img3 from '/img3.jpeg';
 import img4 from '/img4.jpeg';
 import img5 from '/img5.jpeg';
-import img6 from '/img6.jpeg';
 
 const teamMembers = [
   {
@@ -46,39 +42,6 @@ const teamMembers = [
       twitter: { icon: twitter, url: 'https://twitter.com/profile-link-lalitha' },
       instagram: { icon: instagram, url: 'https://instagram.com/profile-link-lalitha' },
       linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/laliteswari-moyilla-2780722a8?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEoMRfwB2NEMPeuU-JzdypayJpK8tc4-SOs&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BZop72bUGRKaC5pMTuMm58w%3D%3D' },
-    },
-  },
-  {
-    name: 'M Srivalli',
-    role: 'Flutter Developer',
-    imgSrc: img3,
-    socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-srivalli' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-srivalli' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-srivalli' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/venkata-sai-srivalli-muthangi?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEs2VggBb6-R7ry7ApM4AcHJW4Y_O3vPVSU&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3B7hA%2BGLdjT6y4Zme81hPO3A%3D%3D' },
-    },
-  },
-  {
-    name: 'D Mallesh',
-    role: 'IoT Engineer',
-    imgSrc: img6,
-    socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-mallesh' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-mallesh' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-mallesh' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/danda-mallesh-reddy-723803215?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAADZnCEsBWG3ZUQ5xA9qntBC3t8UUA13YdhI&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BP%2FEqnZRQSmO25%2BSkkpW8hg%3D%3D' },
-    },
-  },
-  {
-    name: 'P Sai Krishna',
-    role: 'Research',
-    imgSrc: img2,
-    socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-krishna' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-krishna' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-krishna' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/peddinti-saikrishna-a0879225b?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEACcCgBSJlktBAKf8teekI0dCZ5IiE_gPQ&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BkUf82OLQSuK%2BympDBpFZmw%3D%3D' },
     },
   },
 ];
