@@ -2,7 +2,13 @@ const nodemailer = require("nodemailer");
 const SensorData = require("../models/SensorData");
 const User = require("../models/user");
 
-let lastAlert = { temperature: null, oxygen: null, pH: null, conductivity: null, nitrate: null };
+let lastAlert = {
+  temperature: null,
+  oxygen: null,
+  pH: null,
+  conductivity: null,
+  nitrate: null,
+};
 
 const transport = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
@@ -24,17 +30,22 @@ async function checkThresholds() {
     }
 
     const THRESHOLDS = {
-      temperature: 30,
-      oxygen: 8,
-      pH: 7.5,
-      conductivity: 500,
-      nitrate: 10,
+      temperature: 25,     // °C
+      oxygen: 5,           // mg/L
+      pH: 8.5,             // upper safe limit
+      conductivity: 500,   // µS/cm
+      nitrate: 10,         // mg/L
     };
 
     const users = await User.find({}, "email userName");
 
     for (const [key, threshold] of Object.entries(THRESHOLDS)) {
-      if (latestData[key] > threshold && latestData[key] !== lastAlert[key]) {
+      const isBreached =
+        key === "pH"
+          ? latestData[key] < 6.5 || latestData[key] > threshold
+          : latestData[key] > threshold;
+
+      if (isBreached && latestData[key] !== lastAlert[key]) {
         for (const user of users) {
           const mailOptions = {
             from: "bluepulse.team6@gmail.com",
@@ -65,7 +76,7 @@ async function checkThresholds() {
                     </div>
                     <div class="details-box">
                       <p><strong>📍 Location:</strong> ACOE</p>
-                      <p><strong>⚠️ Threshold:</strong> ${threshold} ${getUnit(key)}</p>
+                      <p><strong>⚠️ Threshold:</strong> ${thresholdText(key, threshold)}</p>
                       <p><strong>🔴 Current ${capitalize(key)}:</strong> ${latestData[key]} ${getUnit(key)}</p>
                     </div>
                     <p>Please log in to your monitoring dashboard for more details.</p>
@@ -97,16 +108,20 @@ function getUnit(parameter) {
     case "temperature":
       return "°C";
     case "oxygen":
-      return "mg/L";
-    case "pH":
-      return "pH level";
-    case "conductivity":
-      return "µS/cm";
     case "nitrate":
       return "mg/L";
+    case "pH":
+      return "pH";
+    case "conductivity":
+      return "µS/cm";
     default:
       return "";
   }
+}
+
+function thresholdText(parameter, threshold) {
+  if (parameter === "pH") return `6.5 - ${threshold} pH`;
+  return `> ${threshold} ${getUnit(parameter)}`;
 }
 
 function capitalize(str) {

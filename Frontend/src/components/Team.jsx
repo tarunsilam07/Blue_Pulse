@@ -1,10 +1,8 @@
 import Navbar from './NavBar';
 import Footer from './Footer';
 
-import facebook from '/facebook.svg';
 import instagram from '/instagram.svg';
 import linkedin from '/linkedin.svg';
-import twitter from '/twitter.svg';
 
 import img1 from '/img1.jpeg';
 import img4 from '/img4.jpeg';
@@ -13,35 +11,29 @@ import img5 from '/img5.jpeg';
 const teamMembers = [
   {
     name: 'S Tarun',
-    role: 'FullStack Developer',
+    role: 'Backend Developer & Microcontroller Programmer',
     imgSrc: img1,
     socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-tarun' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-tarun' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-tarun' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/tarun-silam-83a46021a?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAADc9eq4Bu8Q_lgioA8Xc8272XAWv5jnIhXY&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3B8xX27Z60Traa0r73hNE1LA%3D%3D' },
+      instagram: { icon: instagram, url: 'https://www.instagram.com/tarun_077__/' },
+      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/tarun-silam-83a46021a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
     },
   },
   {
     name: 'V Sidhardha',
-    role: 'Project Manager',
+    role: 'Analysis Developer & Integration',
     imgSrc: img5,
     socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-sidhardha' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-sidhardha' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-sidhardha' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/sidhardha-valavala-1a2463276?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAENXy0oB6FeRgPISFhXOo3p3PmGfStdQTWc&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3ByGfd27QLRwKIFkL8BLLW9Q%3D%3D' },
+      instagram: { icon: instagram, url: 'https://www.instagram.com/mr_sidhu.14/' },
+      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/sidhardha-valavala-1a2463276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
     },
   },
   {
-    name: 'M Lalitha',
-    role: 'Frontend Developer',
+    name: 'M Laliteswari',
+    role: 'Frontend Developer & Connectivity',
     imgSrc: img4,
     socials: {
-      facebook: { icon: facebook, url: 'https://facebook.com/profile-link-lalitha' },
-      twitter: { icon: twitter, url: 'https://twitter.com/profile-link-lalitha' },
-      instagram: { icon: instagram, url: 'https://instagram.com/profile-link-lalitha' },
-      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/laliteswari-moyilla-2780722a8?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAEoMRfwB2NEMPeuU-JzdypayJpK8tc4-SOs&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BZop72bUGRKaC5pMTuMm58w%3D%3D' },
+      instagram: { icon: instagram, url: 'https://www.instagram.com/lalli._.iii/' },
+      linkedin: { icon: linkedin, url: 'https://www.linkedin.com/in/laliteswari-moyilla-2780722a8?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
     },
   },
 ];
